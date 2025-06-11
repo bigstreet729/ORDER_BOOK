@@ -1,6 +1,6 @@
 C++ Order Book Matching Engine
 
-A high-performance console-based order book matching engine written in C++.
+A console-based order book matching engine written in C++.
 
 Features
 
@@ -10,7 +10,3 @@ Features
 - Stores orders in efficient `std::map` + `std::list` structures
 - Clean modular C++ design
 
-[ BUY ] 100 x 5
-[ BUY ] 101 x 5
-[ SELL ] 100 x 5
-[ TRADE ] BUY @100 Qty : 5 | 1 is [Mathced with 3
