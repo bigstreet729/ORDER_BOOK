@@ -1,8 +1,8 @@
-#C++ Order Book Matching Engine
+C++ Order Book Matching Engine
 
 A high-performance console-based order book matching engine written in C++.
 
-###Features
+Features
 
 - Supports Limit, Market, Modify, and Cancel orders
 - Implements **price-time priority**
