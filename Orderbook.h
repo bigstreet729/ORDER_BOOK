@@ -13,7 +13,7 @@ private:
   std::map<Price, std::list<Order>> sellOrders;
   std::unordered_map<OrderId, std::pair<Price, std::list<Order>::iterator>>
       orderMap;
-  void modifyOrder(OrderId id, Price newprice, Quantity newQty);
+  void modifyOrder(OrderId id, Price newprice);
 public:
   void addOrder(const Order &order);
   void cancelOrder(OrderId orderid);

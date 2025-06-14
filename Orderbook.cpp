@@ -12,7 +12,7 @@ void Orderbook::addOrder(const Order &order) {
             matchOrder(order, false);
             break;
         case ModifyOrder:
-            modifyOrder(order.getOrderId(), order.getPrice(), order.getInitialQuantity());
+            modifyOrder(order.getOrderId(), order.getPrice());
             break;
         case CancelOrder:
             cancelOrder(order.getOrderId());
@@ -130,7 +130,7 @@ void Orderbook::matchOrder(Order order, bool IsLimit) {
     }
 }
 
-void Orderbook::modifyOrder(OrderId id, Price newprice, Quantity newQty) {
+void Orderbook::modifyOrder(OrderId id, Price newprice) {
     if (orderMap.find(id) == orderMap.end()) {
         std::cout << "[MODIFY FAILES ] OrderId " << id << " not found\n";
         return;
@@ -142,9 +142,10 @@ void Orderbook::modifyOrder(OrderId id, Price newprice, Quantity newQty) {
     Order &oldOrder = *oldIt;
     Side side = oldOrder.getSide();
     OrderType type = oldOrder.getordertype();
+    Quantity oldQty = oldOrder.getRemainingQuantity();
 
     std::cout << " [ MODIFY ] OrderId " << id << " -> NEW PRICE " << newprice
-              << ", New qty : " << newQty << "\n";
+              <<"\n";
 
     auto &orderList = (side == Buy) ? buyOrders[oldprice] : sellOrders[oldprice];
     orderList.erase(oldIt);
@@ -157,7 +158,7 @@ void Orderbook::modifyOrder(OrderId id, Price newprice, Quantity newQty) {
     }
 
     orderMap.erase(found);
-    Order newOrder(type, newprice, newQty, side);
+    Order newOrder(type, newprice, oldQty, side);
     addOrder(newOrder);
 }
 
