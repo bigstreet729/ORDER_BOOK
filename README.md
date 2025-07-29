@@ -2,7 +2,7 @@
 
 This project implements a realistic, high-performance Limit Order Book Matching Engine in C++, suitable for trading simulations, backtesting strategies, or learning how modern exchanges work. The engine supports Limit Orders, Market Orders, Modify Orders, and Cancel Orders. All matching is handled using Price-Time Priority, which mimics real-world order matching behavior and ensures fairness in execution.
 
-The engine is designed for high performance. Efficient use of STL containers allows it to process approximately 1,000,000 orders per second on modern hardware. It supports the full lifecycle of orders, including submission, cancellation, and modification, for both BUY and SELL sides of the book.
+The engine is designed for high performance. Efficient use of STL containers allows it to process approximately 1,000,000 orders per second. It supports the full lifecycle of orders, including submission, cancellation, and modification, for both BUY and SELL sides of the book.
 
 The order book is internally represented using a `std::map<Price, std::list<Order>>`, which maintains price levels in sorted order and allows O(log n) access for insertion and traversal. Each order is tracked using a `std::unordered_map<OrderID, {Price, iterator}>` that provides O(1) access to any existing order, enabling efficient cancellation and modification.
 
