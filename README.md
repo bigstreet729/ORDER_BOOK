@@ -16,7 +16,6 @@ Handles BUY/SELL orders with:
   - Order cancellation & modification
 Uses `std::map<Price, list<Order>>` for O(log n) access to price levels
 Uses `std::unordered_map<OrderId, {Price, iterator}>` for fast lookups
-Fully extensible for future networking or multi-threaded design
 
 ---
 
