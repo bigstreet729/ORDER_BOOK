@@ -21,7 +21,7 @@ void stressTest(Orderbook &ob, int numOrders) {
 
 int main() {
   Orderbook ob;
-  int numOrders = 100000;
+  int numOrders = 1000000;
 
   std::cout << "Starting stress test with " << numOrders
             << " limit orders...\n";
@@ -34,7 +34,7 @@ int main() {
   auto duration =
       std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
-  std::cout << "✅ Orders processed in " << duration.count() << " ms\n";
+  std::cout << "Orders processed in " << duration.count() << " ms\n";
 
   // std::cout << "\nFinal Order Book Snapshot:\n";
   // ob.printDepth();
