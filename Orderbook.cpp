@@ -1,10 +1,11 @@
 #include "Orderbook.h"
+#include "Log.h"
 #include "TimeUtils.h"
 void Orderbook::addOrder(const Order &order) {
-  std::cout << TimeUtils::timePointToString(order.gettimestamp()) << " ";
-  std::cout << (order.getSide() == Buy ? "[ BUY ] " : "[ SELL ] ")
-            << order.getPrice() << " x " << order.getInitialQuantity()
-            << std::endl;
+  LOG(TimeUtils::timePointToString(order.gettimestamp()), " ",
+      order.getOrderId(), " ",
+      (order.getSide() == Buy ? "[ BUY ] " : "[ SELL ] "), order.getPrice(),
+      " x ", order.getInitialQuantity());
 
   switch (order.getordertype()) {
   case LimitOrder:
@@ -25,7 +26,7 @@ void Orderbook::addOrder(const Order &order) {
 void Orderbook::cancelOrder(OrderId orderid) {
   auto found = orderMap.find(orderid);
   if (found == orderMap.end()) {
-    std::cout << "[ CANCEL FAILED ] OrderId " << orderid << " not found\n";
+    LOG("[ CANCEL FAILED ] OrderId ", orderid, " not found");
     return;
   }
 
@@ -33,8 +34,8 @@ void Orderbook::cancelOrder(OrderId orderid) {
   auto it = found->second.second;
   Side side = it->getSide();
 
-  std::cout << "[ CANCEL ] OrderId " << orderid << " Price: " << price
-            << " Qty: " << it->getRemainingQuantity() << "\n";
+  LOG("[ CANCEL ] OrderId ", orderid, " Price: ", price,
+      " Qty: ", it->getRemainingQuantity());
 
   if (side == Buy) {
     auto &lst = buyOrders[price];
@@ -66,11 +67,11 @@ void Orderbook::matchOrder(Order order, bool IsLimit) {
 
         Quantity matchQty = std::min(order.getRemainingQuantity(),
                                      sellIt->getRemainingQuantity());
-        std::cout << TimeUtils::timePointToString(order.gettimestamp()) << " ";
-        std::cout << "[ TRADE ]  BUY @" << sellPrice << " Qty : " << matchQty
-                  << " | " << order.getOrderId() << " is Mathced with "
-                  << sellIt->getOrderId() << "\n";
 
+        LOG(TimeUtils::timePointToString(order.gettimestamp()), " ",
+            order.getOrderId(), " ", "[ TRADE ]  BUY @", sellPrice,
+            " Qty : ", matchQty, " | ", order.getOrderId(), " is Mathced with ",
+            sellIt->getOrderId());
         order.reduceQuantity(matchQty);
         sellIt->reduceQuantity(matchQty);
 
@@ -108,11 +109,11 @@ void Orderbook::matchOrder(Order order, bool IsLimit) {
 
         Quantity matchQty = std::min(order.getRemainingQuantity(),
                                      buyIt->getRemainingQuantity());
-        std::cout << TimeUtils::timePointToString(order.gettimestamp()) << " ";
-        std::cout << "[ TRADE ]  SELL @" << buyPrice << " Qty :" << matchQty
-                  << " | " << order.getOrderId() << " is Matched with "
-                  << buyIt->getOrderId() << "\n";
 
+        LOG(TimeUtils::timePointToString(order.gettimestamp()), " ",
+            order.getOrderId(), " ", "[ TRADE ]  SELL @", buyPrice,
+            " Qty : ", matchQty, " | ", order.getOrderId(), " is Mathced with ",
+            buyIt->getOrderId());
         order.reduceQuantity(matchQty);
         buyIt->reduceQuantity(matchQty);
 
@@ -140,7 +141,7 @@ void Orderbook::matchOrder(Order order, bool IsLimit) {
 
 void Orderbook::modifyOrder(OrderId id, Price newprice) {
   if (orderMap.find(id) == orderMap.end()) {
-    std::cout << "[MODIFY FAILES ] OrderId " << id << " not found\n";
+    LOG("[MODIFY FAILES ] OrderId ", id, " notfound");
     return;
   }
 
@@ -151,9 +152,7 @@ void Orderbook::modifyOrder(OrderId id, Price newprice) {
   Side side = oldOrder.getSide();
   OrderType type = oldOrder.getordertype();
   Quantity oldQty = oldOrder.getRemainingQuantity();
-
-  std::cout << "[ MODIFY ] OrderId " << id << " -> NEW PRICE " << newprice
-            << "\n";
+  LOG("[ MODIFY ] OrderId ", id, " -> NEW PRICE ", newprice);
 
   auto &orderList = (side == Buy) ? buyOrders[oldprice] : sellOrders[oldprice];
   orderList.erase(oldIt);
