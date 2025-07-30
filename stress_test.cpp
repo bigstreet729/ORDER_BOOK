@@ -6,22 +6,27 @@
 
 void stressTest(Orderbook &ob, int numOrders) {
   std::default_random_engine rng;
-  std::uniform_real_distribution<double> priceDist(90.0, 110.0); // Price range
-  std::uniform_int_distribution<int> qtyDist(1, 1000); // Quantity range
-  std::uniform_int_distribution<int> sideDist(0, 1);   // 0 = Buy, 1 = Sell
-  
-  for (int i = 0; i < numOrders; ++i) {
-    double price = priceDist(rng);
-    int qty = qtyDist(rng);
-    Side side = sideDist(rng) == 0 ? Buy : Sell;
+  std::uniform_real_distribution<double> priceDist(90.0, 110.0);
+  std::uniform_int_distribution<int> qtyDist(1, 1000);
+  std::uniform_int_distribution<int> sideDist(0, 1);
+  std::uniform_int_distribution<int> typeDist(0, 1);
 
-    ob.addOrder(Order(LimitOrder, price, qty, side));
+  for (uint32_t i = 0; i < numOrders; ++i) {
+    Side side = sideDist(rng) == 0 ? Buy : Sell;
+    int qty = qtyDist(rng);
+    OrderType type = typeDist(rng) == 0 ? LimitOrder : MarketOrder;
+    if (type == LimitOrder) {
+      double price = priceDist(rng);
+      ob.addOrder(Order(LimitOrder, price, qty, side));
+    } else {
+      ob.addOrder(Order(MarketOrder, 0.0, qty, side));
+    }
   }
 }
 
 int main() {
   Orderbook ob;
-  int numOrders = 1000000;
+  uint32_t numOrders = 1000000;
 
   std::cout << "Starting stress test with " << numOrders
             << " limit orders...\n";
